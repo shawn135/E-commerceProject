@@ -161,6 +161,35 @@ CMD ["python", "app.py"]
 
 
 
+STEP 5: BUILD DOCKER IMAGE
+
+I creaded a sub folder and placed app.py and requirements.txt into it
+run the following code: docker build -t product-catalog .
+
+# Use a Python base image
+FROM python:3.8-slim
+
+# Set the working directory in the container
+WORKDIR /app
+
+# Copy the current directory contents into the container at /app
+COPY ./e-commerce-code /app
+
+# Install the required dependencies
+RUN pip install --no-cache-dir -r requirements.txt
+
+# Set the environment variable for Flask to run in production
+ENV FLASK_APP=app.py
+ENV FLASK_ENV=production
+
+# Expose the port the app runs on
+EXPOSE 5000
+
+# Command to run the application
+CMD ["flask", "run", "--host=0.0.0.0"]
+
+
+
 
 
 
