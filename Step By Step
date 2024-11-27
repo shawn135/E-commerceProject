@@ -126,5 +126,36 @@ using the following code, we can create another stack to connect security groups
 
 STEP 4: SETTING UP SERVICES
 
-Now we create and deploy our lambda functions. 
+Now we create a Python microservice. this will mimic returning product details (like an API endpoint)
+
+from flask import Flask, jsonify
+
+app = Flask(__name__)
+
+@app.route('/products', methods=['GET'])
+def get_products():
+    # Simulating a product catalog with static data
+    products = [
+        {"id": 1, "name": "Laptop", "price": 799},
+        {"id": 2, "name": "Smartphone", "price": 499}
+    ]
+    return jsonify(products)
+
+if __name__ == '__main__':
+    app.run(debug=True, host='0.0.0.0', port=5000)
+
+
+
+Then we create a docker file to package the Python file
+FROM python:3.8-slim
+
+WORKDIR /app
+
+COPY . /app
+
+RUN pip install -r requirements.txt
+
+EXPOSE 5000
+
+CMD ["python", "app.py"]
 
