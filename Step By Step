@@ -146,7 +146,7 @@ if __name__ == '__main__':
 
 
 
-Then we create a docker file to package the Python file
+Then we create a docker file to package the Python file (You will need to install Docker to your computer)
 FROM python:3.8-slim
 
 WORKDIR /app
@@ -158,4 +158,10 @@ RUN pip install -r requirements.txt
 EXPOSE 5000
 
 CMD ["python", "app.py"]
+
+
+
+
+
+
 
