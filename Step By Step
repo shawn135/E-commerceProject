@@ -188,7 +188,102 @@ EXPOSE 5000
 # Command to run the application
 CMD ["flask", "run", "--host=0.0.0.0"]
 
+Step 6: Create Amazon Elastic Container Registry
+Go to AWS console, ECR, and create repository. Selete View Push Commands and follow the steps and log into your ECR
+After several minutes the build will be completed
 
+Step 7: Deploy
+Go to the ECS console and create a Cluster
+Next go to Task definitions on the left side of the console
+Create new task definition
+
+Click Add Container.
+
+In the Add container dialog box:
+
+Container Name: Enter a name (e.g., product-catalog).
+Image: Use your ECR image URI, which looks like:
+<aws_account_id>.dkr.ecr.<region>.amazonaws.com/product-catalog:latest
+
+Replace <aws_account_id> and <region> with your actual AWS account ID and region.
+
+Port Mappings:
+
+Container port: Enter the port your Flask app listens on (e.g., 5000).
+Protocol: Select TCP.
+
+CloudWatch is automatically set up here
+
+
+Defining the container using the Amazon ECR image and setting up the container port involves creating an ECS Task Definition. Here’s how to do it step by step:
+
+Step 1: Access ECS Console
+Go to the Amazon ECS Console.
+In the left-hand menu, click Task Definitions.
+Click the Create new Task Definition button.
+Step 2: Choose Launch Type
+You’ll need to decide whether to use Fargate (serverless) or EC2 (managed by EC2 instances). For simplicity, let’s use Fargate (no need to manage EC2 instances).
+
+Select Fargate as the launch type compatibility.
+Click Next Step.
+Step 3: Configure the Task Definition
+Task Definition Name:
+Provide a name (e.g., product-catalog-task).
+
+Task Role:
+Choose the appropriate IAM role that grants your task permissions to access AWS services (e.g., pulling the ECR image or accessing RDS).
+
+Network Mode:
+Select awsvpc. This is required for Fargate and allows assigning the container an IP address.
+
+Task Size:
+Specify the task size:
+
+Task Memory: Choose the required memory (e.g., 0.5GB for testing).
+Task CPU: Choose the required CPU (e.g., 256 vCPU for testing).
+Step 4: Add Container to the Task Definition
+Click Add Container.
+
+In the Add container dialog box:
+
+Container Name: Enter a name (e.g., product-catalog).
+Image: Use your ECR image URI, which looks like:
+php
+Copy code
+<aws_account_id>.dkr.ecr.<region>.amazonaws.com/product-catalog:latest
+Replace <aws_account_id> and <region> with your actual AWS account ID and region.
+Port Mappings:
+
+Container port: Enter the port your Flask app listens on (e.g., 5000).
+Protocol: Select TCP.
+Step 5: Configure Optional Settings (Logging, Health Checks)
+Log Configuration:
+
+Set up logging to Amazon CloudWatch.
+Choose awslogs as the log driver and configure the log group.
+Health Checks (Optional):
+
+Define a health check endpoint (e.g., /health) to monitor the container’s health.
+Click Add to save the container configuration.
+
+Step 6: Review and Create the Task Definition
+After adding the container, review all the settings for the task definition.
+Click Create to save the task definition.
+Step 7: Deploy the Task Using ECS Service
+Go back to the ECS Console and click on Clusters.
+
+Create a new cluster or use an existing one.
+
+Create a Service:
+
+Choose the task definition you just created.
+Specify the desired number of tasks (e.g., 1 for testing).
+Select a load balancer if needed (or skip for now).
+Assign a VPC and Subnets to your service.
+Click Create Service.
+
+Step 8: Test the Deployed Container
+Once the service is up and running, get the public IP or DNS of the task and test the Flask app using a web browser or curl.
 
 
 
